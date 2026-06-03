@@ -1,0 +1,21 @@
+* { box-sizing: border-box; }
+html { min-height: 100%; background: var(--bg-canvas); }
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100svh;
+  font-family: var(--font-sans);
+  color: var(--text-1);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(93, 202, 165, 0.24), transparent 32rem),
+    radial-gradient(circle at 86% 12%, rgba(250, 199, 117, 0.16), transparent 28rem),
+    linear-gradient(145deg, var(--bg-canvas), #101827 55%, var(--bg-canvas));
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+#root { min-height: 100svh; }
