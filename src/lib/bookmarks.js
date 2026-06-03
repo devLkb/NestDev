@@ -5,8 +5,11 @@ function bookmarksApi() {
   return getChromeApi()?.bookmarks
 }
 
-export function faviconUrl(pageUrl, size = 64) {
-  return chromeRuntimeUrl(`/_favicon/?pageUrl=${encodeURIComponent(pageUrl)}&size=${size}`)
+export function faviconUrl(pageUrl, size = 48) {
+  const url = new URL(chromeRuntimeUrl('/_favicon/'), globalThis.location?.href || 'http://localhost/')
+  url.searchParams.set('pageUrl', pageUrl)
+  url.searchParams.set('size', String(size))
+  return url.toString()
 }
 
 export async function getBookmarkTree() {

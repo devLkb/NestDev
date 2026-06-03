@@ -178,7 +178,7 @@
   gap: 6px;
 }
 
-.iconButton, .settingsButton, .railButton, .ghostIcon, .secondaryButton, .moreButton, .emptyButton, .searchBar button, .bookmarkForm button, .detectedList button {
+.iconButton, .settingsButton, .railButton, .ghostIcon, .secondaryButton, .moreButton, .emptyButton, .searchBar button, .bookmarkForm button, .detectedMain, .detectedAdd {
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-md);
   color: var(--text-1);
@@ -220,7 +220,7 @@
   background: rgba(255,255,255,0.12);
 }
 
-.secondaryButton, .moreButton, .emptyButton, .detectedList button, .bookmarkForm button {
+.secondaryButton, .moreButton, .emptyButton, .detectedMain, .detectedAdd, .bookmarkForm button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -320,7 +320,13 @@
 }
 .leftColumn .detectedList p { font-size: 16px; }
 .detectedList p span { color: var(--accent-soft); }
-.detectedList button {
+.detectedRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 6px;
+}
+.detectedMain {
   display: grid;
   grid-template-columns: 10px auto minmax(0, 1fr);
   justify-content: flex-start;
@@ -333,8 +339,16 @@
   background: transparent;
   font-size: 12px;
 }
+.detectedAdd {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 999px;
+}
 .detectedList small { overflow: hidden; color: var(--text-3); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
-.leftColumn .detectedList button { font-size: 17px; }
+.leftColumn .detectedMain { font-size: 17px; }
 .leftColumn .detectedList small { font-size: 16px; }
 
 .portForm, .bookmarkForm {
@@ -472,10 +486,10 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
   flex: 0 0 auto;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 .bookmarkFallback {
   position: absolute;
@@ -487,7 +501,7 @@
   background:
     linear-gradient(135deg, rgba(255,255,255,0.20), rgba(255,255,255,0)),
     hsl(var(--bookmark-hue, 205) 76% 61%);
-  font-size: 30px;
+  font-size: 34px;
   font-weight: 700;
   line-height: 1;
   text-shadow: 0 1px 2px rgba(0,0,0,0.28);
@@ -496,11 +510,11 @@
 .bookmarkIconImage {
   position: relative;
   z-index: 1;
-  max-width: 32px;
-  max-height: 32px;
-  width: auto;
-  height: auto;
-  border-radius: 8px;
+  width: 48px;
+  height: 48px;
+  max-width: 48px;
+  max-height: 48px;
+  border-radius: 10px;
   image-rendering: auto;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.34));

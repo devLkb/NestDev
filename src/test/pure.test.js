@@ -12,6 +12,7 @@ import {
   sortBookmarkChildren,
   validatePort,
 } from '../lib/pure.js'
+import { faviconUrl } from '../lib/bookmarks.js'
 
 test('validatePort accepts only integer Chrome port range', () => {
   assert.deepEqual(validatePort(3000), { valid: true, port: 3000 })
@@ -61,6 +62,14 @@ test('bookmark icon fallback uses title or URL deterministically', () => {
   assert.equal(bookmarkInitial('나무위키', 'https://namu.wiki'), '나')
   assert.equal(bookmarkInitial('', 'https://github.com/openai'), 'G')
   assert.equal(bookmarkAccentHue('Git', 'https://github.com'), bookmarkAccentHue('Git', 'https://github.com'))
+})
+
+
+test('favicon URL uses Chrome MV3 endpoint with stable 48px default', () => {
+  const url = new URL(faviconUrl('https://github.com/openai?tab=repositories'))
+  assert.equal(url.pathname, '/_favicon/')
+  assert.equal(url.searchParams.get('pageUrl'), 'https://github.com/openai?tab=repositories')
+  assert.equal(url.searchParams.get('size'), '48')
 })
 
 test('sync quota helper detects oversized values', () => {

@@ -1,10 +1,19 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { faviconUrl } from '../../lib/bookmarks.js'
 import { bookmarkAccentHue, bookmarkInitial } from '../../lib/pure.js'
 import styles from '../../App.module.css'
 
 export default function BookmarkIcon({ title, url }) {
   const [fallback, setFallback] = useState(false)
+
+  const showFallback = useCallback(() => {
+    setFallback(true)
+  }, [])
+
+  const handleLoad = useCallback((event) => {
+    const image = event.currentTarget
+    if (!image.naturalWidth || !image.naturalHeight) showFallback()
+  }, [showFallback])
 
   if (fallback) {
     return (
@@ -18,12 +27,12 @@ export default function BookmarkIcon({ title, url }) {
     <span className={styles.bookmarkIconFrame} aria-hidden="true">
       <img
         className={styles.bookmarkIconImage}
-        src={faviconUrl(url, 128)}
-        srcSet={`${faviconUrl(url, 64)} 1x, ${faviconUrl(url, 128)} 2x`}
+        src={faviconUrl(url, 48)}
         alt=""
         decoding="async"
         draggable="false"
-        onError={() => setFallback(true)}
+        onLoad={handleLoad}
+        onError={showFallback}
       />
     </span>
   )

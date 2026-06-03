@@ -16,6 +16,14 @@ export default function LocalhostPanel({ ports, setPorts, detectedTabs, statuses
   const [formOpen, setFormOpen] = useState(false)
   const suggestions = getUnregisteredDetected(ports, detectedTabs)
 
+  const openDetectedTab = (tab) => {
+    if (tab.tabId !== undefined) {
+      void activateTab(tab.tabId)
+      return
+    }
+    globalThis.open?.(`${tab.protocol}://127.0.0.1:${tab.port}`, '_blank')
+  }
+
   const addPort = (nextPort) => {
     const normalized = normalizePortEntry(nextPort)
     const validation = validatePort(normalized.port)
@@ -63,7 +71,7 @@ export default function LocalhostPanel({ ports, setPorts, detectedTabs, statuses
               return (
                 <div className={styles.portRow} key={port.id}>
                   <span className={`${styles.statusDot} ${styles[status]}`} aria-label={statusLabel(status)} />
-                  <button type="button" className={styles.portMain} onClick={() => detected ? activateTab(detected.tabId) : globalThis.open?.(`${port.protocol}://127.0.0.1:${port.port}`, '_blank')}>
+                  <button type="button" className={styles.portMain} onClick={() => detected ? void activateTab(detected.tabId) : globalThis.open?.(`${port.protocol}://127.0.0.1:${port.port}`, '_blank')}>
                     <strong>:{port.port}</strong>
                     <span>{port.label || statusLabel(status)}</span>
                   </button>
@@ -81,10 +89,15 @@ export default function LocalhostPanel({ ports, setPorts, detectedTabs, statuses
             <p>감지된 열린 탭 <span>자동</span></p>
             {suggestions.length === 0 && <p className={styles.empty}>열린 탭 없음</p>}
             {suggestions.map((tab) => (
-              <button key={`${tab.protocol}:${tab.port}`} type="button" onClick={() => addPort({ port: tab.port, protocol: tab.protocol, label: tab.title })}>
-                <span className={`${styles.statusDot} ${styles.up}`} aria-hidden="true" />
-                :{tab.port} <small>{tab.title || tab.protocol}</small>
-              </button>
+              <div className={styles.detectedRow} key={`${tab.protocol}:${tab.port}`}>
+                <button type="button" className={styles.detectedMain} onClick={() => openDetectedTab(tab)} aria-label={`:${tab.port} 접속`}>
+                  <span className={`${styles.statusDot} ${styles.up}`} aria-hidden="true" />
+                  :{tab.port} <small>{tab.title || tab.protocol}</small>
+                </button>
+                <button type="button" className={styles.detectedAdd} onClick={() => addPort({ port: tab.port, protocol: tab.protocol, label: tab.title })} aria-label={`:${tab.port} 등록`}>
+                  <Plus size={14} />
+                </button>
+              </div>
             ))}
           </div>
         </>
@@ -102,7 +115,7 @@ export default function LocalhostPanel({ ports, setPorts, detectedTabs, statuses
         </form>
       )}
       {error && <p className={styles.error}>{error}</p>}
-      <p className={styles.hint}>자체서명 HTTPS는 꺼짐으로 표시될 수 있습니다.</p>
+      {formOpen && <p className={styles.hint}>자체서명 HTTPS는 꺼짐으로 표시될 수 있습니다.</p>}
     </section>
   )
 }
