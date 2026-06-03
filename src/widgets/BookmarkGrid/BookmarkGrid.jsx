@@ -11,7 +11,7 @@ function BookmarkTile({ node, onOpenFolder, onDelete }) {
   if (isFolder) {
     return (
       <button type="button" className={`${styles.bookmarkTile} ${styles.folderTile}`} onClick={() => onOpenFolder(node)}>
-        <Folder size={24} />
+        <Folder size={26} />
         <span>{node.title || '폴더'}</span>
       </button>
     )
@@ -56,11 +56,13 @@ export default function BookmarkGrid({ rootId, bookmarks, loading, onOpenFolder,
   return (
     <section className={styles.bookmarkSection} aria-label="북마크">
       <div className={styles.bookmarkHeader}>
-        <div>
-          <h1>NestDev</h1>
-          <p>북마크바 바로가기</p>
+        <div className={styles.bookmarkTitleRow}>
+          <h1>Bookmarks</h1>
+          <button type="button" className={styles.ghostIcon} onClick={() => setFormOpen((value) => !value)} aria-label="북마크 추가">
+            <Plus size={15} />
+          </button>
         </div>
-        <button type="button" className={styles.secondaryButton} onClick={() => setFormOpen((value) => !value)}><Plus size={16} /> 추가</button>
+        <span className={styles.bookmarkStatus}>폴더 관리 유지</span>
       </div>
 
       {formOpen && (
@@ -78,7 +80,12 @@ export default function BookmarkGrid({ rootId, bookmarks, loading, onOpenFolder,
       {loading ? <div className={styles.bookmarkSkeleton} /> : (
         <>
           <div className={styles.bookmarkGrid}>
-            {visible.length === 0 && <p className={styles.empty}>표시할 북마크가 없습니다.</p>}
+            {visible.length === 0 && (
+              <button type="button" className={`${styles.bookmarkTile} ${styles.emptyBookmarkTile}`} onClick={() => setFormOpen(true)}>
+                <Plus size={22} />
+                <span>북마크 추가</span>
+              </button>
+            )}
             {visible.map((node) => <BookmarkTile key={node.id} node={node} onOpenFolder={onOpenFolder} onDelete={onDelete} />)}
           </div>
           {hasMore && <button type="button" className={styles.moreButton} onClick={() => setExpanded((value) => !value)}>{expanded ? '접기' : `더 보기 (${bookmarks.length - DEFAULT_VISIBLE})`}</button>}

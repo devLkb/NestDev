@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Settings } from 'lucide-react'
+import { Code2, Monitor, Settings, Wrench } from 'lucide-react'
 import { findBookmarkBarId, getBookmarkTree } from './lib/bookmarks.js'
 import { getPorts, getSettings, getNotes, savePorts, saveSettings, saveNotes } from './lib/storage.js'
 import { getFolderChildren } from './lib/bookmarks.js'
@@ -19,6 +19,26 @@ const SAVE_DELAY = 350
 function collectTopLevelFolders(tree) {
   const root = tree[0]
   return (root?.children || []).filter((node) => !node.url)
+}
+
+function RightRail({ onOpenSettings }) {
+  return (
+    <nav className={styles.rightRail} aria-label="도구 레일">
+      <button className={styles.railButton} type="button" onClick={onOpenSettings} aria-label="설정 열기">
+        <Settings size={18} />
+      </button>
+      <button className={styles.railButton} type="button" disabled aria-label="유틸리티 패널은 다음 버전에서 제공됩니다">
+        <Wrench size={18} />
+      </button>
+      <button className={styles.railButton} type="button" disabled aria-label="코드 패널은 다음 버전에서 제공됩니다">
+        <Code2 size={18} />
+      </button>
+      <button className={styles.railButton} type="button" disabled aria-label="브라우저 패널은 다음 버전에서 제공됩니다">
+        <Monitor size={18} />
+      </button>
+      <span className={styles.railLabel}>슬라이드 패널</span>
+    </nav>
+  )
 }
 
 function App() {
@@ -220,10 +240,8 @@ function App() {
         />
       </section>
 
-      <aside className={styles.rightColumn} aria-label="설정">
-        <button className={styles.settingsButton} type="button" onClick={() => setSettingsOpen(true)} aria-label="설정 열기">
-          <Settings size={22} />
-        </button>
+      <aside className={styles.rightColumn} aria-label="설정과 예정 도구">
+        <RightRail onOpenSettings={() => setSettingsOpen(true)} />
       </aside>
 
       {storageWarning && <p className={styles.localOnlyToast}>일부 데이터가 이 기기에만 저장됨: {storageWarning}</p>}

@@ -13,6 +13,7 @@ function statusLabel(status) {
 export default function LocalhostPanel({ ports, setPorts, detectedTabs, statuses, loading, localOnly, onRefresh }) {
   const [form, setForm] = useState({ port: '', label: '', protocol: 'http' })
   const [error, setError] = useState('')
+  const [formOpen, setFormOpen] = useState(false)
   const suggestions = getUnregisteredDetected(ports, detectedTabs)
 
   const addPort = (nextPort) => {
@@ -28,6 +29,7 @@ export default function LocalhostPanel({ ports, setPorts, detectedTabs, statuses
     }
     setPorts((current) => [...current, normalized])
     setForm({ port: '', label: '', protocol: 'http' })
+    setFormOpen(false)
     setError('')
   }
 
@@ -36,60 +38,71 @@ export default function LocalhostPanel({ ports, setPorts, detectedTabs, statuses
       <div className={styles.panelHeader}>
         <div>
           <h2>localhost</h2>
-          <p>등록 포트와 열린 개발 서버 탭</p>
+          <p>등록한 포트</p>
         </div>
-        <button type="button" className={styles.iconButton} onClick={onRefresh} aria-label="포트 새로고침">
-          <RefreshCcw size={17} />
-        </button>
+        <div className={styles.panelActions}>
+          <button type="button" className={styles.iconButton} onClick={onRefresh} aria-label="포트 새로고침">
+            <RefreshCcw size={15} />
+          </button>
+          <button type="button" className={styles.iconButton} onClick={() => setFormOpen((value) => !value)} aria-label="포트 추가 폼 열기">
+            <Plus size={16} />
+          </button>
+        </div>
       </div>
 
       {localOnly && <p className={styles.notice}>이 포트 목록은 이 기기에만 저장됨</p>}
-      <p className={styles.hint}>HTTPS 자체서명 인증서는 실제로 켜져 있어도 꺼짐으로 표시될 수 있습니다.</p>
 
       {loading ? <div className={styles.skeletonList} /> : (
-        <div className={styles.portList}>
-          {ports.length === 0 && <p className={styles.empty}>등록된 포트가 없습니다. 포트를 추가하세요.</p>}
-          {ports.map((port) => {
-            const key = `${port.protocol}:${port.port}`
-            const detected = detectedTabs.find((tab) => tab.protocol === port.protocol && tab.port === port.port)
-            const status = statuses[key] || 'checking'
-            return (
-              <div className={styles.portRow} key={port.id}>
-                <span className={`${styles.statusDot} ${styles[status]}`} aria-label={statusLabel(status)} />
-                <button type="button" className={styles.portMain} onClick={() => detected ? activateTab(detected.tabId) : globalThis.open?.(`${port.protocol}://127.0.0.1:${port.port}`, '_blank')}>
-                  <strong>{port.label || `${port.protocol}:${port.port}`}</strong>
-                  <span>{port.protocol}://127.0.0.1:{port.port}</span>
-                </button>
-                <button type="button" className={styles.ghostIcon} onClick={() => setPorts((current) => current.filter((item) => item.id !== port.id))} aria-label="포트 삭제">
-                  <Trash2 size={15} />
-                </button>
-              </div>
-            )
-          })}
-        </div>
+        <>
+          <div className={styles.portList}>
+            {ports.length === 0 && <p className={styles.empty}>등록된 포트가 없습니다.</p>}
+            {ports.map((port) => {
+              const key = `${port.protocol}:${port.port}`
+              const detected = detectedTabs.find((tab) => tab.protocol === port.protocol && tab.port === port.port)
+              const status = statuses[key] || 'checking'
+              return (
+                <div className={styles.portRow} key={port.id}>
+                  <span className={`${styles.statusDot} ${styles[status]}`} aria-label={statusLabel(status)} />
+                  <button type="button" className={styles.portMain} onClick={() => detected ? activateTab(detected.tabId) : globalThis.open?.(`${port.protocol}://127.0.0.1:${port.port}`, '_blank')}>
+                    <strong>:{port.port}</strong>
+                    <span>{port.label || statusLabel(status)}</span>
+                  </button>
+                  <button type="button" className={styles.ghostIcon} onClick={() => setPorts((current) => current.filter((item) => item.id !== port.id))} aria-label="포트 삭제">
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+
+          <div className={styles.portDivider} />
+
+          <div className={styles.detectedList}>
+            <p>감지된 열린 탭 <span>자동</span></p>
+            {suggestions.length === 0 && <p className={styles.empty}>열린 탭 없음</p>}
+            {suggestions.map((tab) => (
+              <button key={`${tab.protocol}:${tab.port}`} type="button" onClick={() => addPort({ port: tab.port, protocol: tab.protocol, label: tab.title })}>
+                <span className={`${styles.statusDot} ${styles.up}`} aria-hidden="true" />
+                :{tab.port} <small>{tab.title || tab.protocol}</small>
+              </button>
+            ))}
+          </div>
+        </>
       )}
 
-      <form className={styles.portForm} onSubmit={(event) => { event.preventDefault(); addPort(form) }}>
-        <select value={form.protocol} onChange={(event) => setForm((current) => ({ ...current, protocol: event.target.value }))} aria-label="프로토콜">
-          <option value="http">http</option>
-          <option value="https">https</option>
-        </select>
-        <input value={form.port} onChange={(event) => setForm((current) => ({ ...current, port: event.target.value }))} inputMode="numeric" placeholder="3000" aria-label="포트" />
-        <input value={form.label} onChange={(event) => setForm((current) => ({ ...current, label: event.target.value }))} placeholder="라벨" aria-label="라벨" />
-        <button type="submit" className={styles.iconButton} aria-label="포트 추가"><Plus size={17} /></button>
-      </form>
+      {formOpen && (
+        <form className={styles.portForm} onSubmit={(event) => { event.preventDefault(); addPort(form) }}>
+          <select value={form.protocol} onChange={(event) => setForm((current) => ({ ...current, protocol: event.target.value }))} aria-label="프로토콜">
+            <option value="http">http</option>
+            <option value="https">https</option>
+          </select>
+          <input value={form.port} onChange={(event) => setForm((current) => ({ ...current, port: event.target.value }))} inputMode="numeric" placeholder="3000" aria-label="포트" />
+          <input value={form.label} onChange={(event) => setForm((current) => ({ ...current, label: event.target.value }))} placeholder="라벨" aria-label="라벨" />
+          <button type="submit" className={styles.iconButton} aria-label="포트 추가"><Plus size={16} /></button>
+        </form>
+      )}
       {error && <p className={styles.error}>{error}</p>}
-
-      {suggestions.length > 0 && (
-        <div className={styles.detectedList}>
-          <p>감지된 탭</p>
-          {suggestions.map((tab) => (
-            <button key={`${tab.protocol}:${tab.port}`} type="button" onClick={() => addPort({ port: tab.port, protocol: tab.protocol, label: tab.title })}>
-              {tab.protocol}:{tab.port} 등록
-            </button>
-          ))}
-        </div>
-      )}
+      <p className={styles.hint}>자체서명 HTTPS는 꺼짐으로 표시될 수 있습니다.</p>
     </section>
   )
 }

@@ -7,8 +7,19 @@ export default function NoteList({ notes, setNotes, loading, localOnly }) {
   const updateNote = (id, content) => setNotes((current) => current.map((note) => note.id === id ? { ...note, content, updatedAt: Date.now() } : note))
   const deleteNote = (id) => setNotes((current) => current.filter((note) => note.id !== id))
 
+  if (!loading && notes.length === 0) {
+    return (
+      <section className={`${styles.panel} ${styles.notePanel}`} aria-label="노트">
+        {localOnly && <p className={styles.notice}>노트가 이 기기에만 저장됨</p>}
+        <button type="button" className={styles.emptyNoteButton} onClick={addNote}>
+          <Plus size={15} /> Add Note
+        </button>
+      </section>
+    )
+  }
+
   return (
-    <section className={styles.panel} aria-label="노트">
+    <section className={`${styles.panel} ${styles.notePanel}`} aria-label="노트">
       <div className={styles.panelHeader}>
         <div>
           <h2>노트</h2>
@@ -19,7 +30,6 @@ export default function NoteList({ notes, setNotes, loading, localOnly }) {
       {localOnly && <p className={styles.notice}>노트가 이 기기에만 저장됨</p>}
       {loading ? <div className={styles.skeletonList} /> : (
         <div className={styles.noteList}>
-          {notes.length === 0 && <button type="button" className={styles.emptyButton} onClick={addNote}>Add Note</button>}
           {notes.map((note) => (
             <div className={styles.noteCard} key={note.id}>
               <textarea value={note.content} onChange={(event) => updateNote(note.id, event.target.value)} placeholder="메모 내용" />
