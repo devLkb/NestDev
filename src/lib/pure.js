@@ -46,6 +46,27 @@ export function sortBookmarkChildren(children = []) {
   })
 }
 
+function bookmarkTextSource(title, url) {
+  const label = title?.trim()
+  if (label) return label
+  try {
+    return new URL(url).hostname
+  } catch {
+    return url?.trim() || '?'
+  }
+}
+
+export function bookmarkInitial(title, url) {
+  const [first = '?'] = Array.from(bookmarkTextSource(title, url))
+  return first.toLocaleUpperCase('ko-KR')
+}
+
+export function bookmarkAccentHue(title, url) {
+  const source = bookmarkTextSource(title, url)
+  const hash = Array.from(source).reduce((value, char) => value + char.codePointAt(0), 0)
+  return hash % 360
+}
+
 export function isLikelyUrl(input) {
   const value = input.trim()
   if (!value || /\s/.test(value)) return false

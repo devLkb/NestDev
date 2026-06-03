@@ -1,17 +1,20 @@
-import { ExternalLink, Folder, Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
-import { createBookmark, createFolder, faviconUrl, removeBookmark } from '../../lib/bookmarks.js'
+import { createBookmark, createFolder, removeBookmark } from '../../lib/bookmarks.js'
 import { isLikelyUrl, normalizeNavigableUrl } from '../../lib/pure.js'
+import BookmarkIcon from '../BookmarkIcon/BookmarkIcon.jsx'
 import styles from '../../App.module.css'
 
-const DEFAULT_VISIBLE = 12
+const DEFAULT_VISIBLE = 16
 
 function BookmarkTile({ node, onOpenFolder, onDelete }) {
   const isFolder = !node.url
   if (isFolder) {
     return (
       <button type="button" className={`${styles.bookmarkTile} ${styles.folderTile}`} onClick={() => onOpenFolder(node)}>
-        <Folder size={26} />
+        <span className={`${styles.bookmarkIconFrame} ${styles.folderIconFrame}`} aria-hidden="true">
+          <span className={styles.folderGlyph} />
+        </span>
         <span>{node.title || '폴더'}</span>
       </button>
     )
@@ -20,9 +23,8 @@ function BookmarkTile({ node, onOpenFolder, onDelete }) {
   return (
     <div className={styles.bookmarkTileWrap}>
       <a className={styles.bookmarkTile} href={node.url} title={node.title || node.url}>
-        <img src={faviconUrl(node.url)} alt="" onError={(event) => { event.currentTarget.style.display = 'none' }} />
+        <BookmarkIcon title={node.title} url={node.url} />
         <span>{node.title || node.url}</span>
-        <ExternalLink size={13} />
       </a>
       <button type="button" className={styles.tileDelete} onClick={() => onDelete(node)} aria-label="북마크 삭제"><Trash2 size={13} /></button>
     </div>
@@ -62,7 +64,6 @@ export default function BookmarkGrid({ rootId, bookmarks, loading, onOpenFolder,
             <Plus size={15} />
           </button>
         </div>
-        <span className={styles.bookmarkStatus}>폴더 관리 유지</span>
       </div>
 
       {formOpen && (
@@ -82,7 +83,9 @@ export default function BookmarkGrid({ rootId, bookmarks, loading, onOpenFolder,
           <div className={styles.bookmarkGrid}>
             {visible.length === 0 && (
               <button type="button" className={`${styles.bookmarkTile} ${styles.emptyBookmarkTile}`} onClick={() => setFormOpen(true)}>
-                <Plus size={22} />
+                <span className={`${styles.bookmarkIconFrame} ${styles.emptyIconFrame}`} aria-hidden="true">
+                  <Plus size={24} />
+                </span>
                 <span>북마크 추가</span>
               </button>
             )}

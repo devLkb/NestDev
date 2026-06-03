@@ -103,6 +103,7 @@
 .bookmarkSection {
   width: min(1480px, 100%);
   margin: 0 auto;
+  padding-top: 2px;
 }
 
 .panelHeader, .bookmarkHeader, .overlayHeader {
@@ -118,32 +119,22 @@
 }
 
 .panelHeader h2, .overlayHeader h2 { font-size: 13px; }
+.leftColumn .panelHeader h2 { font-size: 18px; }
 .bookmarkHeader h1 {
-  border-radius: var(--radius-sm);
-  padding: 5px 10px;
-  font-size: 12px;
+  border-radius: 999px;
+  padding: 7px 16px;
+  color: rgba(28, 32, 38, 0.78);
+  font-size: 14px;
   font-weight: 600;
-  background: rgba(255,255,255,0.10);
+  line-height: 1;
+  background: rgba(255,255,255,0.94);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
 }
 
 .bookmarkTitleRow {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-.bookmarkStatus {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--accent-soft);
-  font-size: 11px;
-  line-height: 1;
-}
-
-.bookmarkStatus::before {
-  content: '✓';
-  font-weight: 700;
+  gap: 12px;
 }
 
 .panelHeader p, .hint, .empty, .breadcrumb {
@@ -151,6 +142,11 @@
   color: var(--text-2);
   font-size: 11px;
   line-height: 1.35;
+}
+.leftColumn .panelHeader p,
+.leftColumn .hint,
+.leftColumn .empty {
+  font-size: 16px;
 }
 
 .notice, .error, .localOnlyToast {
@@ -161,6 +157,10 @@
 }
 .notice { color: #2d1f00; background: rgba(250,199,117,0.86); }
 .error { color: #fff; background: rgba(226,75,74,0.75); }
+.leftColumn .notice,
+.leftColumn .error {
+  font-size: 17px;
+}
 .localOnlyToast {
   position: fixed;
   left: 50%;
@@ -207,6 +207,19 @@
   color: var(--text-2);
 }
 
+.bookmarkTitleRow .ghostIcon {
+  border: 0;
+  border-radius: 999px;
+  color: rgba(255,255,255,0.96);
+  background: transparent;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.45));
+}
+
+.bookmarkTitleRow .ghostIcon:hover,
+.bookmarkTitleRow .ghostIcon:focus-visible {
+  background: rgba(255,255,255,0.12);
+}
+
 .secondaryButton, .moreButton, .emptyButton, .detectedList button, .bookmarkForm button {
   display: inline-flex;
   align-items: center;
@@ -250,14 +263,6 @@
   opacity: 0.55;
 }
 
-.railLabel {
-  margin-top: 4px;
-  color: var(--text-3);
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  writing-mode: vertical-rl;
-}
-
 .portList, .noteList, .detectedList {
   display: flex;
   flex-direction: column;
@@ -298,6 +303,8 @@
 .portMain strong, .portMain span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .portMain strong { font-size: 12px; font-weight: 600; }
 .portMain span { color: var(--text-3); font-size: 11px; }
+.leftColumn .portMain strong { font-size: 17px; }
+.leftColumn .portMain span { font-size: 16px; }
 
 .portDivider {
   height: 1px;
@@ -311,6 +318,7 @@
   color: var(--text-2);
   font-size: 11px;
 }
+.leftColumn .detectedList p { font-size: 16px; }
 .detectedList p span { color: var(--accent-soft); }
 .detectedList button {
   display: grid;
@@ -326,6 +334,8 @@
   font-size: 12px;
 }
 .detectedList small { overflow: hidden; color: var(--text-3); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.leftColumn .detectedList button { font-size: 17px; }
+.leftColumn .detectedList small { font-size: 16px; }
 
 .portForm, .bookmarkForm {
   display: grid;
@@ -344,6 +354,10 @@
   color: var(--text-1);
   background: rgba(255,255,255,0.08);
 }
+.leftColumn .portForm input,
+.leftColumn .portForm select {
+  font-size: 17px;
+}
 
 .emptyNoteButton {
   display: inline-flex;
@@ -358,6 +372,7 @@
   background: transparent;
   font-size: 12px;
 }
+.leftColumn .emptyNoteButton { font-size: 17px; }
 
 .noteCard { position: relative; }
 .noteCard textarea {
@@ -371,6 +386,7 @@
   color: var(--text-1);
   background: rgba(255,255,255,0.07);
 }
+.leftColumn .noteCard textarea { font-size: 16px; }
 .noteCard .ghostIcon { position: absolute; top: 8px; right: 8px; }
 
 .searchBar {
@@ -406,50 +422,141 @@
 
 .bookmarkGrid, .overlayGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-  gap: 11px;
-  margin-top: 10px;
+  grid-template-columns: repeat(auto-fill, 96px);
+  justify-content: start;
+  gap: 22px 23px;
+  margin-top: 16px;
 }
 
-.bookmarkTileWrap { position: relative; min-width: 0; aspect-ratio: 1; }
+.bookmarkTileWrap {
+  position: relative;
+  min-width: 0;
+  width: 96px;
+  height: 100px;
+}
 .bookmarkTile {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
   width: 100%;
   height: 100%;
   min-height: 0;
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: var(--radius-md);
-  padding: 12px;
+  border: 0;
+  border-radius: 12px;
+  padding: 0 4px 4px;
   color: var(--text-1);
   text-align: center;
   text-decoration: none;
-  background: rgba(255,255,255,0.10);
+  text-shadow: var(--text-scrim);
+  background: transparent;
+  transition: transform 140ms ease, background-color 140ms ease;
 }
-.bookmarkTile span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
-.bookmarkTile img { width: 28px; height: 28px; border-radius: 7px; }
-.folderTile { color: var(--folder); background: rgba(255,255,255,0.10); }
+.bookmarkTile:hover,
+.bookmarkTile:focus-visible {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.08);
+  outline: 0;
+}
+.bookmarkTile span:not(.bookmarkIconFrame):not(.folderGlyph):not(.bookmarkFallback) {
+  max-width: 100%;
+  overflow: hidden;
+  color: rgba(255,255,255,0.96);
+  font-size: 14px;
+  line-height: 1.18;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bookmarkIconFrame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+}
+.bookmarkFallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: inherit;
+  color: rgba(255,255,255,0.96);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.20), rgba(255,255,255,0)),
+    hsl(var(--bookmark-hue, 205) 76% 61%);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+}
+.bookmarkIconImage {
+  position: relative;
+  z-index: 1;
+  max-width: 32px;
+  max-height: 32px;
+  width: auto;
+  height: auto;
+  border-radius: 8px;
+  image-rendering: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.34));
+}
+.folderIconFrame {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.34));
+}
+.folderGlyph {
+  position: relative;
+  width: 58px;
+  height: 40px;
+  margin-top: 10px;
+  border-radius: 3px 5px 5px 5px;
+  background: linear-gradient(#fff, #f2f4f7);
+}
+.folderGlyph::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -9px;
+  width: 24px;
+  height: 12px;
+  border-radius: 4px 4px 0 0;
+  background: #fff;
+}
+.folderTile { color: var(--text-1); background: transparent; }
 .emptyBookmarkTile {
-  border-style: dashed;
   color: var(--text-3);
-  background: rgba(255,255,255,0.05);
+  background: transparent;
+}
+.emptyIconFrame {
+  border: 1px dashed rgba(255,255,255,0.46);
+  color: rgba(255,255,255,0.84);
+  background: rgba(255,255,255,0.10);
 }
 .tileDelete {
   position: absolute;
-  top: -7px;
-  right: -7px;
-  display: none;
+  top: -8px;
+  right: 10px;
+  display: grid;
+  place-items: center;
   width: 24px;
   height: 24px;
   border: 0;
   border-radius: 999px;
   color: white;
   background: rgba(226,75,74,0.88);
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 140ms ease, transform 140ms ease;
 }
-.bookmarkTileWrap:hover .tileDelete { display: grid; place-items: center; }
+.bookmarkTileWrap:hover .tileDelete,
+.bookmarkTileWrap:focus-within .tileDelete {
+  opacity: 1;
+  transform: translateY(0);
+}
 .moreButton { margin-top: 16px; width: 100%; }
 
 .overlayBackdrop {
@@ -469,8 +576,13 @@
   padding: 24px;
 }
 .settingsPanel { width: min(520px, 100%); }
-.overlayGrid .bookmarkTileWrap, .overlayGrid .bookmarkTile { aspect-ratio: auto; min-height: 86px; }
-.overlayGrid .bookmarkTile { height: auto; }
+.overlayGrid {
+  grid-template-columns: repeat(auto-fill, 96px);
+}
+.overlayGrid .bookmarkTileWrap,
+.overlayGrid .bookmarkTile {
+  min-height: 100px;
+}
 
 .settingRow, .checkRow {
   display: flex;
@@ -512,7 +624,7 @@
   .rightColumn { width: var(--right-dock-width); }
   .rightRail { width: 44px; }
   .bookmarkForm { grid-template-columns: 1fr; }
-  .bookmarkGrid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
+  .bookmarkGrid { grid-template-columns: repeat(auto-fill, 96px); }
 }
 
 @media (max-width: 640px) {
@@ -534,8 +646,10 @@
     border-left: 0;
     padding-top: 0;
   }
-  .railLabel { display: none; }
-  .bookmarkGrid, .overlayGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bookmarkGrid, .overlayGrid {
+    grid-template-columns: repeat(auto-fill, 96px);
+    justify-content: center;
+  }
   .bookmarkHeader { align-items: center; }
   .searchBar { grid-template-columns: 22px 1fr 32px 32px; }
 }

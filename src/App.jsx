@@ -36,7 +36,6 @@ function RightRail({ onOpenSettings }) {
       <button className={styles.railButton} type="button" disabled aria-label="브라우저 패널은 다음 버전에서 제공됩니다">
         <Monitor size={18} />
       </button>
-      <span className={styles.railLabel}>슬라이드 패널</span>
     </nav>
   )
 }

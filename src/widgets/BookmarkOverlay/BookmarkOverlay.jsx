@@ -1,6 +1,7 @@
-import { ArrowLeft, ExternalLink, Folder, Trash2, X } from 'lucide-react'
+import { ArrowLeft, Trash2, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { faviconUrl, getFolderChildren, removeBookmark } from '../../lib/bookmarks.js'
+import { getFolderChildren, removeBookmark } from '../../lib/bookmarks.js'
+import BookmarkIcon from '../BookmarkIcon/BookmarkIcon.jsx'
 import styles from '../../App.module.css'
 
 export default function BookmarkOverlay({ rootId, title, onClose }) {
@@ -46,15 +47,16 @@ export default function BookmarkOverlay({ rootId, title, onClose }) {
             {children.length === 0 && <p className={styles.empty}>이 폴더는 비어 있습니다.</p>}
             {children.map((node) => !node.url ? (
               <button key={node.id} type="button" className={`${styles.bookmarkTile} ${styles.folderTile}`} onClick={() => setStack((items) => [...items, { id: node.id, title: node.title || '폴더' }])}>
-                <Folder size={24} />
+                <span className={`${styles.bookmarkIconFrame} ${styles.folderIconFrame}`} aria-hidden="true">
+                  <span className={styles.folderGlyph} />
+                </span>
                 <span>{node.title || '폴더'}</span>
               </button>
             ) : (
               <div className={styles.bookmarkTileWrap} key={node.id}>
                 <a className={styles.bookmarkTile} href={node.url}>
-                  <img src={faviconUrl(node.url)} alt="" onError={(event) => { event.currentTarget.style.display = 'none' }} />
+                  <BookmarkIcon title={node.title} url={node.url} />
                   <span>{node.title || node.url}</span>
-                  <ExternalLink size={13} />
                 </a>
                 <button type="button" className={styles.tileDelete} onClick={() => deleteNode(node)} aria-label="북마크 삭제"><Trash2 size={13} /></button>
               </div>

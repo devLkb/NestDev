@@ -1,6 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import {
+  bookmarkAccentHue,
+  bookmarkInitial,
   exceedsSyncItemQuota,
   formatClock,
   isLikelyUrl,
@@ -53,6 +55,12 @@ test('bookmark children render folders before bookmark URLs while preserving ind
     { id: 'f1', index: 1, title: 'F1' },
   ])
   assert.deepEqual(sorted.map((item) => item.id), ['f1', 'f2', 'b'])
+})
+
+test('bookmark icon fallback uses title or URL deterministically', () => {
+  assert.equal(bookmarkInitial('나무위키', 'https://namu.wiki'), '나')
+  assert.equal(bookmarkInitial('', 'https://github.com/openai'), 'G')
+  assert.equal(bookmarkAccentHue('Git', 'https://github.com'), bookmarkAccentHue('Git', 'https://github.com'))
 })
 
 test('sync quota helper detects oversized values', () => {

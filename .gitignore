@@ -16,9 +16,11 @@ dist-ssr
 .omx/
 .codex/
 .claude/
+.omc/
 
 # Project documents
 docs/
+output/
 
 # Editor directories and files
 .vscode/*

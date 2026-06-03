@@ -17,6 +17,20 @@ export const DEFAULT_SETTINGS = {
   schemaVersion: 1,
 }
 
+export const DEFAULT_PORTS = [
+  { id: 'default-port-vite-5173', port: 5173, label: 'Vite', protocol: 'http', createdAt: 0 },
+  { id: 'default-port-react-3000', port: 3000, label: 'React / Next.js', protocol: 'http', createdAt: 0 },
+  { id: 'default-port-vite-alt-5174', port: 5174, label: 'Vite Alt', protocol: 'http', createdAt: 0 },
+  { id: 'default-port-angular-4200', port: 4200, label: 'Angular', protocol: 'http', createdAt: 0 },
+  { id: 'default-port-vue-8080', port: 8080, label: 'Vue / Webpack', protocol: 'http', createdAt: 0 },
+  { id: 'default-port-python-8000', port: 8000, label: 'Python / Django', protocol: 'http', createdAt: 0 },
+  { id: 'default-port-flask-5000', port: 5000, label: 'Flask / API', protocol: 'http', createdAt: 0 },
+]
+
+function clonePorts(ports) {
+  return ports.map((port) => ({ ...port }))
+}
+
 const memoryStore = new Map()
 
 function area(areaName) {
@@ -117,8 +131,9 @@ export async function saveSettings(settings) {
 }
 
 export async function getPorts() {
-  const { value, localOnly } = await readKey(STORAGE_KEYS.ports, [])
-  return { ports: Array.isArray(value) ? value : [], localOnly }
+  const { value, localOnly } = await readKey(STORAGE_KEYS.ports, DEFAULT_PORTS)
+  const ports = Array.isArray(value) && value.length > 0 ? value : DEFAULT_PORTS
+  return { ports: clonePorts(ports), localOnly }
 }
 
 export async function savePorts(ports) {
